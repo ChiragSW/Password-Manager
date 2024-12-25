@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Set Master Password</title>
+    <style>
+        /* General body styling */
+        body {
+            background-color: #121212; /* Dark background */
+            color: #ffffff; /* Light text color */
+            font-family: 'Roboto', sans-serif; /* Font style */
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Modal container styling */
+        .modal-container {
+            display: flex; /* Use flexbox for centering */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            position: fixed; /* Fixed position to cover the entire viewport */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+        }
+
+        /* Modal content styling */
+        .modal-content {
+            background-color: #1e1e1e; /* Dark background for modal */
+            padding: 2rem;
+            border-radius: 8px; /* Rounded corners */
+            text-align: center; /* Center text */
+            color: #ffffff; /* Light text color */
+            width: 300px; /* Set a fixed width for the modal */
+        }
+
+        /* Headings styling in modal */
+        .modal-content h2 {
+            color: #e0e0e0; /* Light gray color for headings */
+        }
+
+        /* Input styling */
+        input {
+            width: 90%; /* Full width for input */
+            padding: 0.8rem;
+            margin-top: 1rem; /* Spacing between elements */
+            border: none;
+            border-radius: 4px; /* Rounded corners */
+            background-color: #333; /* Darker input background */
+            color: #fff; /* Light text for input */
+        }
+
+        /* Button styling */
+        button {
+            background-color: #6200ea; /* Purple button background */
+            color: #ffffff; /* Light text color */
+            font-weight: bold;
+            cursor: pointer; /* Pointer cursor on hover */
+            transition: background-color 0.3s; /* Smooth hover transition */
+            margin-top: 1rem; /* Space above the button */
+        }
+
+        button:hover {
+            background-color: #3700b3; /* Darker purple on hover */
+        }
+
+        /* Additional info box styling */
+        .additional-info {
+            margin-top: 1rem; /* Space above textarea */
+        }
+
+        textarea {
+            width: 100%; /* Full width for textarea */
+            padding: 0.8rem; /* Padding inside textarea */
+            border: none;
+            border-radius: 4px; /* Rounded corners */
+            background-color: #333; /* Darker textarea background */
+            color: #fff; /* Light text for textarea */
+            resize: vertical; /* Allow vertical resizing only */
+            height: 80px; /* Default height for textarea */
+        }
+    </style>
+</head>
+<body>
+    <div class="modal-container">
+        <div class="modal-content">
+            <h2>Set Master Password</h2>
+            <form method="POST">
+                <input type="password" name="master_password" placeholder="Enter Master Password" required>
+                <button type="submit">Set Password</button>
+            </form>
+            <div class="additional-info">
+                New user can set any master.
+            </div>
+        </div>
+    </div>
+</body>
+</html>

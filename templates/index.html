@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Your Passwords</title>
+</head>
+<body>
+    <div class="container">
+        <div class="logout-container">
+            <button onclick="window.location.href='/logout'">Logout</button>
+        </div>
+
+        <h1>Your Passwords</h1>
+        <form method="POST">
+            <input type="text" name="website" placeholder="Website" required>
+            <input type="text" name="password" placeholder="Password" required>
+            <button type="submit" class="add-password-btn">Add Password</button>
+        </form>
+        <ul>
+            {% for id, website, password in passwords %}
+            <li>
+                <span>{{ website }}</span>
+                <span class="password-controls">
+                    <button class="view-btn" onclick="fetchPassword({{ id }})">View</button>
+                    <form action="/delete/{{ id }}" method="POST" style="display:inline;">
+                        <button class="delete-btn" type="submit">Delete</button>
+                    </form>
+                </span>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <script>
+        function fetchPassword(id) {
+            fetch(`/view/${id}`, { method: 'POST' }) // Use backticks for template literals
+                .then(response => response.json())
+                .then(data => alert(`Password: ${data.password}`)) // Use backticks here
+                .catch(error => console.error('Error fetching password:', error));
+        }
+    </script>
+</body>
+</html>
