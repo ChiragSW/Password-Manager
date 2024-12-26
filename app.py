@@ -2,10 +2,18 @@ from flask import Flask, render_template, request, redirect, jsonify, session
 import sqlite3
 from dotenv import load_dotenv
 import os
+import bcrypt # Library for hashing passwords
+from cryptography.fernet import Fernet # Library for encryption and decryption
 
-load_dotenv()
+
+load_dotenv() # Loading environment variables from .env file
 app = Flask(__name__)
-app.secret_key = os.getenv('SECRET_KEY', 'default_secret_key')  # Required for session handling
+app.secret_key = os.getenv('SECRET_KEY', 'default_secret_key')  # Required key for session handling
+
+# Loading an encryption key from environment variables
+encryption_key = os.getnev('ENCRYPTION_KEY').encode()
+cipher = Fernet(encryption_key) # Cipher
+
 
 # Database initialization
 def init_db():
@@ -31,6 +39,22 @@ def init_db():
         conn.commit()
 
 init_db()
+
+# Hash a plain-text password
+def hash_password(plain_text_password):
+    return bcrypt.hashpw(plain_text_password.encode('utf-8'), bcrypt.gensalt())
+
+# Verify a plain-text password against a hashed password
+def verify_password(plain_text_password, hashed_password):
+    return bcrypt.checkpw(plain_text_password.encode('utf-8'), hashed_password)
+
+# Encrypt a plain-text password
+def encrypt_password(password):
+    return cipher.encrypt(password.encode('utf-8'))
+
+# Decrypt an encrypted password
+def decrypt_password(encrypted_password):
+    return cipher.decrypt(encrypted_password).decode('utf-8')
 
 @app.route("/")
 def home():
@@ -60,7 +84,8 @@ def master():
 
             # If not found, create a new master password
             try:
-                cursor.execute("INSERT INTO users (password) VALUES (?)", (master_password,))
+                hashed_password = hash_password(master_password)
+                cursor.execute("INSERT INTO users (password) VALUES (?)", (hashed_password,))
                 conn.commit()
                 session["authenticated"] = True
                 session["user_id"] = cursor.lastrowid
@@ -85,6 +110,8 @@ def index():
             website = request.form.get("website")
             password = request.form.get("password")
             try:
+                # Encrypting password before storing in database
+                encrypted_password = encrypt_password(password)
                 cursor.execute("INSERT INTO passwords (user_id, website, password) VALUES (?, ?, ?)",
                                (user_id, website, password))
                 conn.commit()
@@ -94,6 +121,9 @@ def index():
         # Retrieve passwords for the logged-in user
         cursor.execute("SELECT id, website, password FROM passwords WHERE user_id = ?", (user_id,))
         passwords = cursor.fetchall()
+
+        # Decrypt password to display
+        passwords = [(id, website, decrypt_password(password)) for id, website, password in passwords]
 
     return render_template("index.html", passwords=passwords)
 
@@ -127,7 +157,8 @@ def view_password(password_id):
         password = cursor.fetchone()
 
     if password:
-        return jsonify({"password": password[0]})
+        # decrypt the password before returning
+        return jsonify({"password": decrypt_password(password[0])})
     return "Password not found!", 404
 
 @app.route("/logout")
