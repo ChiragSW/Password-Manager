@@ -1,5 +1,4 @@
 # Password Manager
-#### Video Demo:  https://youtu.be/MrVXOCj60Lg
 #### Description:
 Welcome to the Password Manager, your trusted companion for keeping your online passwords secure and organized! In today’s digital world, managing multiple passwords can be overwhelming. That’s where our application comes in, designed with you in mind to make password management a breeze.
 
